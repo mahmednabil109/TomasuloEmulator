@@ -1,6 +1,7 @@
 # TomaSuiiiiii
-
-![suiiii](./assets/suiiii.jpg)
+<p align="center">
+<img src="./assets/suiiii.jpg" alt="suiii" />
+<p>
 
 ## Dev Notes
 - to add a featuer make a branch from the main branch.
