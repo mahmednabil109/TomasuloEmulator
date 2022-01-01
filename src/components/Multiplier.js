@@ -2,7 +2,7 @@ import Input from '../utils/Input';
 import Observer from '../utils/Observer';
 import Output from '../utils/Ouptut';
 
-class Adder extends Observer {
+class Multiplier extends Observer {
   constructor() {
     super();
     this.input = new Input(this);
@@ -19,10 +19,10 @@ class Adder extends Observer {
           const { operation, firstReg, secondReg, tag } = oper;
           let result = firstReg;
           const counter = 0;
-          if (operation == 'add') {
-            result += secondReg;
+          if (operation == 'mult') {
+            result *= secondReg;
           } else {
-            result -= secondReg;
+            result /= secondReg;
           }
           this.dataMap.set(tag, {
             result,
@@ -36,16 +36,16 @@ class Adder extends Observer {
         } else {
           if (!this.load) {
             this.output.load({ result: value.result, tag: key });
-            this.load=true;
+            this.load = true;
           }
         }
       });
-      if(this.load){
-        this.load=false;
+      if (this.load) {
+        this.load = false;
         this.dataMap.delete(this.output.data.tag);
       }
     }
   }
 }
 
-export default Adder;
+export default Multiplier;
