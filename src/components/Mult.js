@@ -2,7 +2,7 @@ import Input from '../utils/Input';
 import Observer from '../utils/Observer';
 import Output from '../utils/Ouptut';
 
-class Adder extends Observer {
+class Mult extends Observer {
   constructor() {
     //tag-operation-reg1val-reg2val
     //oper=>inlec(add,sub)
@@ -13,16 +13,16 @@ class Adder extends Observer {
 
 this.addo=(operlist)=>{
   for(var n in operlist){
-   var oper=operlist[n];
-    console.log(oper);
+    var oper=operlist[n];
+     console.log(oper);
   if(Object.keys(oper).length!==0){
    if(!datamap.has(oper.tag)){
   var op=oper.op+"";
-  if(op.includes("ADD")){
-var res=oper.reg1val+oper.reg2val;
+  if(op.includes("MUL")){
+var res=oper.reg1val*oper.reg2val;
   }
   else{
-    var res=oper.reg1val-oper.reg2val;
+    var res=oper.reg1val/oper.reg2val;
   }
 datamap.set(oper.tag,{op:oper.op,res:res,counter:0})
   }}}
@@ -111,4 +111,4 @@ this.checker=()=>{
 
 }
 
-export default Adder;
+export default Mult;
