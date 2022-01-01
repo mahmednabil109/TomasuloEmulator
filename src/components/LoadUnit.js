@@ -27,21 +27,32 @@ class LoadUnit extends Observer {
     if (input) {
       let { base, offset, destination } = input;
       let data = this.memoryUnit.get(base + offset);
-      if (data)
-        this.dataMap.set(data, {
-          latency: this.latency,
-          destination: destination,
-        });
+      if (data) {
+        let vals = this.dataMap.get(destination);
+        console.log('VALS', typeof vals);
+        if (vals) {
+          vals.push({ latency: this.latency, data });
+          this.dataMap.set(destination, vals);
+        } else {
+          this.dataMap.set(destination, [{ latency: this.latency, data }]);
+        }
+      }
     }
-    console.log(this.dataMap, 'DATAMAP');
+
     var write = false;
-    for (var [key, { latency, destination }] of this.dataMap) {
-      let l = latency - 1;
-      this.dataMap.set(key, { l, destination });
-      if (l <= 0 && !write) {
-        this.output.load({ key, destination });
-        write = true;
-        this.dataMap.delete(key);
+    for (var [key, values] of this.dataMap) {
+      let index = 0;
+      console.log(key, values, 'KV');
+      for (var { latency, data } of values) {
+        console.log(latency, data, 'LD');
+        latency--;
+        // this.dataMap.set(key, { latency, data });
+        if (latency <= 0 && !write) {
+          this.output.load({ key, data });
+          write = true;
+          values.pop(index);
+        }
+        index++;
       }
     }
   }

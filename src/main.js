@@ -36,10 +36,12 @@ output1.load({ base: 1, offset: 0, destination: 'F2' });
 // clk.connect(reg3.clk);
 clk.connect(reg2.clk);
 clk.connect(reg1.clk);
-
+let counter = 0;
 clkBtn.addEventListener('click', () => {
   clk.tick();
-
+  if (counter > 1) output1.load(null);
+  if (counter > 2) output1.load({ base: 2, offset: 0, destination: 'F8' });
+  counter++;
   Logger.log('tick');
   Logger.log('\t reg1', reg1.data);
   Logger.log('\t reg2', reg2.data);

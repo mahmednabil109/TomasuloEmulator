@@ -20,11 +20,12 @@ class StoreUnit extends Observer {
   }
 
   update(input) {
-    if (input)
+    if (input) {
       this.dataMap.set(input['address'], {
         latency: input['latency'],
         value: input['value'],
       });
+    }
     var write = false;
     for (var [address, { latency, value }] of this.dataMap) {
       let l = latency - 1;
