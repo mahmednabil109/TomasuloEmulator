@@ -65,7 +65,7 @@ class RegFile extends Observer {
   }
 
   tag(regName, tag) {
-    this.dataMap.set(regName, { tag, value: 0 });
+    this.dataMap.set(regName.toLowerCase(), { tag, value: 0 });
   }
 
   setRegto(regName, value) {
