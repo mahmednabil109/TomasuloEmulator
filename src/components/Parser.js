@@ -75,14 +75,17 @@ class Parser extends Observer {
             throw new Error(`Unkowen Instruction ${line} ${tokens}`);
         }
         // handle R4,R2
-        const regs = tokens[1].split(',');
+        const regs = tokens[1]
+          .split(',')
+          .map((s) => s.trim())
+          .filter((l) => l);
         // handle #23
         if (op === ADDI && line.includes('#'))
           return new Instruction(op, regs[0], regs[1], regs[3].substr(1));
         if (op !== LOAD && op !== STORE) return new Instruction(op, ...regs);
         // handle 4(R3)
         if (line.includes('(')) {
-          let [offset, baseReg] = regs[1].split('(');
+          let [offset, baseReg] = regs[1].split('(').map((l) => l.trim());
           return new Instruction(
             op,
             regs[0],

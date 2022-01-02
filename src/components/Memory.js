@@ -22,7 +22,7 @@ class Memory extends Observer {
     if (data) {
       Logger.assert(data instanceof Operation, 'data must be an operation');
       if (data.operation !== LOAD && data.operation !== STORE) return;
-      this.operation.push({ data, count: -1 });
+      this.operation.push({ data, count: 0 });
     } else {
       this.opertations = this.opertations.map(({ data, count }) => ({
         data,

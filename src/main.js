@@ -10,33 +10,34 @@ import ReserveStations from './components/ReserveStations';
 import { ADD, DIV, LOAD, MULT, STORE, SUB } from './constants/Operations';
 import Memory from './components/Memory';
 
+let counter = 1;
 let clk = new Clk();
 
-let adder = new Adder(2);
-let multi = new Multiplier(3);
+let adder = new Adder(4);
+let multi = new Multiplier(6);
 let memory = new Memory(2);
 
 let regFile = new RegFile();
-let adderRS = new ReserveStations(2, [ADD, SUB]);
-let multiRS = new ReserveStations(2, [MULT, DIV]);
-let loadRS = new ReserveStations(2, [LOAD]);
-let storeRS = new ReserveStations(2, [STORE]);
+let adderRS = new ReserveStations(3, [ADD, SUB], adder);
+let multiRS = new ReserveStations(2, [MULT, DIV], multi);
+// we need to handle memory
+let loadRS = new ReserveStations(2, [LOAD], memory);
+let storeRS = new ReserveStations(2, [STORE], memory);
 let instQueue = new InstQueue(adderRS, multiRS, loadRS, storeRS, regFile);
 let parser = new Parser(
   `
-  SUB R8,R2,R6
-  ADD R9,R8,R6
-  MUL R9,R8,R6
-  ADD R10,R9,R6
-  ADD R11,R2,R6
+  MUL R3,R1,R2
+  ADD R5,R3,R4
+  ADD R7,R2,R9
+  ADD R10,R8,R9
+  MUL R11,R7,R10
+  ADD R5,R5,R11
   `,
   instQueue
 );
 
 // init the regfile
-regFile.setRegto('r8', 10);
-regFile.setRegto('r6', 12);
-regFile.setRegto('r2', 20);
+for (let i = 1; i < 12; i++) regFile.setRegto(`r${i}`, i);
 
 // connect them
 instQueue.output.connect(adderRS.input);
@@ -83,10 +84,11 @@ clk.connect(parser.clk);
 
 clk.connect(regFile.clk);
 
+Logger.log(parser.instructions);
 Logger.log(instQueue.instructions);
 
 function log() {
-  Logger.log('clk');
+  Logger.log(`clk ${counter++}`);
   Logger.log('\taddRS', adderRS.operations);
   Logger.log('\tadder', adder.operations);
   Logger.log('\tmultRS', multiRS.operations);
