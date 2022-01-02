@@ -1,49 +1,49 @@
+import { DIV, MULT } from '../constants/Operations';
 import Input from '../utils/Input';
+import Logger from '../utils/Logger';
 import Observer from '../utils/Observer';
+import Operation from '../utils/Operation';
 import Output from '../utils/Ouptut';
+import Result from '../utils/Result';
 
 class Multiplier extends Observer {
-  constructor() {
+  constructor(latency) {
     super();
+    this.latency = latency;
+    this.operations = [];
+
     this.input = new Input(this);
-    this.dataMap = new Map();
     this.clk = new Input(this);
     this.output = new Output();
-    this.load = false;
   }
 
   update(data) {
-    if (!data) {
-      if (this.input.data.length != 0) {
-        for (const oper of this.input.data) {
-          const { operation, firstReg, secondReg, tag } = oper;
-          let result = firstReg;
-          const counter = 0;
-          if (operation == 'mult') {
-            result *= secondReg;
-          } else {
-            result /= secondReg;
-          }
-          this.dataMap.set(tag, {
-            result,
-            counter,
-          });
+    if (data) {
+      Logger.assert(data instanceof Operation);
+      if (data.operation !== MULT && data.operation !== DIV) return;
+      this.operations.push({ data, count: 0 });
+    } else {
+      // add one to the count
+      this.operations = this.operations.map(({ data, count }) => ({
+        data,
+        count: count + 1,
+      }));
+      // filter finished operations
+      this.operations = this.operations.filter(({ data, count }) => {
+        if (count === this.latency) {
+          this.output.load(
+            new Result(
+              data.tag,
+              data.operation === MULT
+                ? Number(data.operand1) * Number(data.operand2)
+                : Number(data.operand1) / Number(data.operand2)
+            )
+          );
+          // return false to remove it from the list
+          return false;
         }
-      }
-      this.dataMap.forEach((value, key) => {
-        if (value.counter < 2) {
-          value.counter += 1;
-        } else {
-          if (!this.load) {
-            this.output.load({ result: value.result, tag: key });
-            this.load = true;
-          }
-        }
+        return true;
       });
-      if (this.load) {
-        this.load = false;
-        this.dataMap.delete(this.output.data.tag);
-      }
     }
   }
 }

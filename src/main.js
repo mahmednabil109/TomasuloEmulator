@@ -4,36 +4,22 @@ import Clk from './components/Clk';
 import Register from './components/Register';
 import '../styles/style.css';
 import Output from './utils/Ouptut';
+import Parser from './components/Parser';
 
-let clkBtn = document.querySelector('.btn');
-let adder = new Adder();
 let clk = new Clk();
-let output1 = new Output(),
-  output2 = new Output();
-let reg1 = new Register(),
-  reg2 = new Register(),
-  reg3 = new Register();
+let parser = new Parser(
+  `
+  LD R6,32(R2)
+  LD R2,44(R3)
+  MUL R0,R2,R4
+  SUB R8,R2,R6
+  DIV R10,R0,R6
+  ADD R6,R8,R2`,
+  null
+);
 
-output1.connect(reg1.input);
-output2.connect(reg2.input);
+Logger.log(parser.instructions);
 
-reg1.output.connect(adder.input1);
-reg2.output.connect(adder.input2);
-
-adder.output.connect(reg3.input);
-
-output1.load(20);
-output2.load(30);
-
-clk.connect(reg3.clk);
-clk.connect(reg2.clk);
-clk.connect(reg1.clk);
-
-clkBtn.addEventListener('click', () => {
-  clk.tick();
-  Logger.log('tick');
-  Logger.log('\t reg1', reg1.data);
-  Logger.log('\t reg2', reg2.data);
-  Logger.log('\t adder', adder.output.data);
-  Logger.log('\t reg3', reg3.data);
+document.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') clk.tick();
 });

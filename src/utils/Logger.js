@@ -7,6 +7,11 @@ class Logger {
     // eslint-disable-next-line no-console
     console.log(`[${this.prefix || 'LOG'}] ${msg.join(' ')}`);
   }
+
+  static assert(condition) {
+    // eslint-disable-next-line no-console
+    console.assert(!!condition);
+  }
 }
 
 export default Logger;
