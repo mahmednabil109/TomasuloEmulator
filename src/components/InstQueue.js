@@ -55,6 +55,17 @@ class InstQueue extends Observer {
             dstData,
             dstAvail ? null : dstData
           );
+        } else if (inst.operation === LOAD) {
+          let [reg2Avail, reg2Data] = this.regFile.isAvailable(inst.reg2);
+          operation = new Operation(
+            availableTag,
+            inst.operation,
+            inst.reg1,
+            reg2Data,
+            null,
+            reg2Avail ? null : reg2Data
+          );
+          this.regFile.tag(inst.dst, availableTag);
         } else {
           const [reg1Avail, reg1Data] = this.regFile.isAvailable(inst.reg1);
           const [reg2Avail, reg2Data] = this.regFile.isAvailable(inst.reg2);

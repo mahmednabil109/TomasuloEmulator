@@ -21,7 +21,7 @@ class Multiplier extends Observer {
     if (data) {
       Logger.assert(data instanceof Operation, 'data must be an operation');
       if (data.operation !== MULT && data.operation !== DIV) return;
-      this.operations.push({ data, count: 0 });
+      this.operations.push({ data, count: -1 });
     } else {
       // add one to the count
       this.operations = this.operations.map(({ data, count }) => ({
