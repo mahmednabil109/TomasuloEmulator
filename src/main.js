@@ -9,7 +9,7 @@ import RegFile from './components/RegFile';
 import ReserveStations from './components/ReserveStations';
 import Memory from './components/Memory';
 import './ui/frontend';
-import { queueEl, regFileEl } from './ui/frontend';
+import { memoryEl, queueEl, regFileEl } from './ui/frontend';
 import '../styles/style.css';
 
 let counter = 1;
@@ -37,6 +37,7 @@ let parser = new Parser(
   `
   MUL R3,R1,R2
   ADD R5,R3,R4
+  SW R5,10(R1)
   ADD R7,R2,R9
   ADD R10,R8,R9
   MUL R11,R7,R10
@@ -102,6 +103,9 @@ function log() {
   Logger.log('\tadder', adder.operations);
   Logger.log('\tmultRS', multiRS.operations);
   Logger.log('\tmult', multi.operations);
+  Logger.log('\tstoreRS', storeRS.operations);
+  Logger.log('\tmemory', memory.operations);
+  Logger.log('\tmemory', memory.dataMap);
   Logger.log('\tregFile', regFile.dataMap);
 }
 

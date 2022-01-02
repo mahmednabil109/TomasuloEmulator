@@ -11,7 +11,7 @@ class Memory extends Observer {
     super();
     this.latency = latency;
     this.dataMap = new Map();
-    this.opertations = [];
+    this.operations = [];
 
     this.input = new Input(this);
     this.clk = new Input(this);
@@ -22,19 +22,19 @@ class Memory extends Observer {
     if (data) {
       Logger.assert(data instanceof Operation, 'data must be an operation');
       if (data.operation !== LOAD && data.operation !== STORE) return;
-      this.operation.push({ data, count: 0 });
+      this.operations.push({ data, count: 0 });
     } else {
-      this.opertations = this.opertations.map(({ data, count }) => ({
+      this.operations = this.operations.map(({ data, count }) => ({
         data,
         count: count + 1,
       }));
-      this.opertations = this.opertations.filter(({ data, count }) => {
+      this.operations = this.operations.filter(({ data, count }) => {
         if (count === this.latency) {
           let addresse = Number(data.operand1) + Number(data.operand2);
 
-          switch (data.tag) {
+          switch (data.operation) {
             case STORE:
-              this.dataMap.set(addresse, this.dst);
+              this.dataMap.set(addresse, data.dst);
               break;
             case LOAD:
               if (!this.dataMap.has(addresse)) this.dataMap.set(addresse, 0);
