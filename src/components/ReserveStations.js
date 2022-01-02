@@ -8,9 +8,10 @@ import Result from '../utils/Result';
 class ReserveStations extends Observer {
   // takes an array types of the valid oprations
   // takes a object that maps operation to delay
-  constructor(size, types) {
+  constructor(size, types, exec) {
     super();
     this.size = size;
+    this.exec = exec;
     this.counter = 0;
     this.tagPrefix = types[0];
     this.types = new Set(types);
@@ -62,7 +63,7 @@ class ReserveStations extends Observer {
   }
 
   hasSpace() {
-    return this.operations.length !== this.size;
+    return this.operations.length + this.exec.operations.length !== this.size;
   }
 
   nextTag() {

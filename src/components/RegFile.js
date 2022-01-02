@@ -4,9 +4,10 @@ import Observer from '../utils/Observer';
 import Result from '../utils/Result';
 
 class RegFile extends Observer {
-  constructor() {
+  constructor(el) {
     super();
     // map would hold an object {tag, value}
+    this.el = el;
     this.buffered = [];
     this.dataMap = new Map();
     this.input = new Input(this);
@@ -27,6 +28,16 @@ class RegFile extends Observer {
       // perform tasks
       // handle buffered
       this._handleBUffered();
+      this.render();
+    }
+  }
+
+  render() {
+    this.el.innerHTML = '';
+    for (const [key, value] of this.dataMap) {
+      const div = document.createElement('div');
+      div.innerHTML = `${key} -> ${JSON.stringify(value)}`;
+      this.el.append(div);
     }
   }
 
@@ -59,6 +70,7 @@ class RegFile extends Observer {
 
   setRegto(regName, value) {
     this.dataMap.set(regName, { tag: null, value });
+    this.render();
   }
 }
 

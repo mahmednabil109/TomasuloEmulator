@@ -27,7 +27,7 @@ class Adder extends Observer {
         data.operation !== ADDI
       )
         return;
-      this.operations.push({ data, count: -1 });
+      this.operations.push({ data, count: 0 });
     } else {
       this.operations = this.operations.map(({ data, count }) => ({
         data,
