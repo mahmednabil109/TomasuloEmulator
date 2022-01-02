@@ -1,4 +1,4 @@
-import { ADD, ADDI, SUB } from '../constants/Operations';
+import { DIV, MULT } from '../constants/Operations';
 import Input from '../utils/Input';
 import Logger from '../utils/Logger';
 import Observer from '../utils/Observer';
@@ -6,7 +6,7 @@ import Operation from '../utils/Operation';
 import Output from '../utils/Ouptut';
 import Result from '../utils/Result';
 
-class Adder extends Observer {
+class Multiplier extends Observer {
   constructor(latency) {
     super();
     this.latency = latency;
@@ -20,29 +20,26 @@ class Adder extends Observer {
   update(data) {
     if (data) {
       Logger.assert(data instanceof Operation, 'data must be an operation');
-      // TODO handle ADDI
-      if (
-        data.operation !== ADD &&
-        data.operation !== SUB &&
-        data.operation !== ADDI
-      )
-        return;
-      this.operations.push({ data, count: -1 });
+      if (data.operation !== MULT && data.operation !== DIV) return;
+      this.operations.push({ data, count: 0 });
     } else {
+      // add one to the count
       this.operations = this.operations.map(({ data, count }) => ({
         data,
         count: count + 1,
       }));
+      // filter finished operations
       this.operations = this.operations.filter(({ data, count }) => {
         if (count === this.latency) {
           this.output.load(
             new Result(
               data.tag,
-              data.operation === ADD
-                ? Number(data.operand1 + data.operand2)
-                : Number(data.operand1 - data.operand2)
+              data.operation === MULT
+                ? Number(data.operand1) * Number(data.operand2)
+                : Number(data.operand1) / Number(data.operand2)
             )
           );
+          // return false to remove it from the list
           return false;
         }
         return true;
@@ -51,4 +48,4 @@ class Adder extends Observer {
   }
 }
 
-export default Adder;
+export default Multiplier;
