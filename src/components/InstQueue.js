@@ -13,8 +13,9 @@ import Observer from '../utils/Observer';
 import Operation from '../utils/Operation';
 
 class InstQueue extends Observer {
-  constructor(addRS, multRS, loadRS, storeRS, regFile) {
+  constructor(addRS, multRS, loadRS, storeRS, regFile, el) {
     super();
+    this.el = el;
     this.instructions = [];
     this.regFile = regFile;
     this.RSs = {
@@ -83,16 +84,28 @@ class InstQueue extends Observer {
         // return false to filter this instruction
         return false;
       });
+      this.render();
     }
+  }
+
+  render() {
+    this.el.innerHTML = '';
+    this.instructions.forEach((inst) => {
+      const div = document.createElement('div');
+      div.innerText = JSON.stringify(inst);
+      this.el.appendChild(div);
+    });
   }
 
   // inialize the queue
   init(inst) {
     this.instructions = [inst];
+    this.render();
   }
   // add instruction to the queue
   add(inst) {
     this.instructions.push(inst);
+    this.render();
   }
 }
 

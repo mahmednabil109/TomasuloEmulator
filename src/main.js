@@ -1,14 +1,16 @@
+import { ADD, DIV, LOAD, MULT, STORE, SUB } from './constants/Operations';
 import Logger from './utils/Logger';
 import Adder from './components/Adder';
 import Clk from './components/Clk';
-import '../styles/style.css';
 import Parser from './components/Parser';
 import Multiplier from './components/Multiplier';
 import InstQueue from './components/InstQueue';
 import RegFile from './components/RegFile';
 import ReserveStations from './components/ReserveStations';
-import { ADD, DIV, LOAD, MULT, STORE, SUB } from './constants/Operations';
 import Memory from './components/Memory';
+import './ui/frontend';
+import { queueEl, regFileEl } from './ui/frontend';
+import '../styles/style.css';
 
 let counter = 1;
 let clk = new Clk();
@@ -17,13 +19,20 @@ let adder = new Adder(4);
 let multi = new Multiplier(6);
 let memory = new Memory(2);
 
-let regFile = new RegFile();
+let regFile = new RegFile(regFileEl);
 let adderRS = new ReserveStations(3, [ADD, SUB], adder);
 let multiRS = new ReserveStations(2, [MULT, DIV], multi);
 // we need to handle memory
 let loadRS = new ReserveStations(2, [LOAD], memory);
-let storeRS = new ReserveStations(2, [STORE], memory);
-let instQueue = new InstQueue(adderRS, multiRS, loadRS, storeRS, regFile);
+let storeRS = new ReserveStations(2, [STORE], memory, queueEl);
+let instQueue = new InstQueue(
+  adderRS,
+  multiRS,
+  loadRS,
+  storeRS,
+  regFile,
+  queueEl
+);
 let parser = new Parser(
   `
   MUL R3,R1,R2
