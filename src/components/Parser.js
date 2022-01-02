@@ -95,7 +95,8 @@ class Parser extends Observer {
         }
       });
 
-    this.queue?.init(this.instructions[this.pc++]);
+    if (this.instructions.length)
+      this.queue?.init(this.instructions[this.pc++]);
   }
 
   update(data) {

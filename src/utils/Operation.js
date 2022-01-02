@@ -21,9 +21,13 @@ class Operation {
     return !this.tag1 && !this.tag2;
   }
 
+  needs(tag) {
+    return [this.tag1, this.tag2, this.opTag].some((t) => t === tag);
+  }
+
   substitute({ tag, value }) {
-    Logger.assert(tag !== null);
-    Logger.assert(value !== null && !isNaN(value));
+    Logger.assert(tag !== null, 'tag must be not null');
+    Logger.assert(value !== null && !isNaN(value), 'value must be a  number');
 
     if (this.tag1 === tag) {
       this.operand1 = value;

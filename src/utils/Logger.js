@@ -5,7 +5,7 @@ class Logger {
 
   static log(...msg) {
     // eslint-disable-next-line no-console
-    console.log(`[${this.prefix || 'LOG'}] ${msg.join(' ')}`);
+    console.log(`[${this.prefix || 'LOG'}]`, ...msg);
   }
 
   static assert(condition) {

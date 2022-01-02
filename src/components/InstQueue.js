@@ -39,7 +39,7 @@ class InstQueue extends Observer {
       this.instructions = this.instructions.filter((inst) => {
         // issue it if the reservation station has space
         // we return true if there is not space to not filter it
-        if (!this.RSs[inst.operation].hasSPace()) return true;
+        if (!this.RSs[inst.operation]?.hasSpace()) return true;
         let operation;
         let availableTag = this.RSs[inst.operation].nextTag();
         if (inst.operation === STORE) {

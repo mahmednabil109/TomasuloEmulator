@@ -19,7 +19,7 @@ class Multiplier extends Observer {
 
   update(data) {
     if (data) {
-      Logger.assert(data instanceof Operation);
+      Logger.assert(data instanceof Operation, 'data must be an operation');
       if (data.operation !== MULT && data.operation !== DIV) return;
       this.operations.push({ data, count: 0 });
     } else {

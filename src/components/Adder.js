@@ -10,7 +10,7 @@ class Adder extends Observer {
   constructor(latency) {
     super();
     this.latency = latency;
-    this.operation = [];
+    this.operations = [];
 
     this.input = new Input(this);
     this.clk = new Input(this);
@@ -19,7 +19,7 @@ class Adder extends Observer {
 
   update(data) {
     if (data) {
-      Logger.assert(data instanceof Operation);
+      Logger.assert(data instanceof Operation, 'data must be an operation');
       // TODO handle ADDI
       if (
         data.operation !== ADD &&
@@ -27,13 +27,13 @@ class Adder extends Observer {
         data.operation !== ADDI
       )
         return;
-      this.operations.push({ data, count: 0 });
+      this.operations.push({ data, count: -1 });
     } else {
-      this.operation = this.operation.map(({ data, count }) => ({
+      this.operations = this.operations.map(({ data, count }) => ({
         data,
         count: count + 1,
       }));
-      this.operation = this.operation.filter(({ data, count }) => {
+      this.operations = this.operations.filter(({ data, count }) => {
         if (count === this.latency) {
           this.output.load(
             new Result(

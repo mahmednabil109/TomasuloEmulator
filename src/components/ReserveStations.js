@@ -12,10 +12,12 @@ class ReserveStations extends Observer {
     super();
     this.size = size;
     this.counter = 0;
+    this.tagPrefix = types[0];
     this.types = new Set(types);
     this.operations = [];
     this.buffered = [];
     this.input = new Input(this);
+    this.clk = new Input(this);
     this.output = new Output();
   }
 
@@ -24,7 +26,10 @@ class ReserveStations extends Observer {
       // Input Change
       if (data instanceof Operation) {
         // check that there is a space
-        Logger.assert(this.operations.length < this.size);
+        Logger.assert(
+          this.operations.length < this.size,
+          'reservation station dose not have enough space'
+        );
         // if it matches the resercation station then add it
         if (this.types.has(data.operation)) this.operations.push(data);
       }
@@ -47,9 +52,9 @@ class ReserveStations extends Observer {
   _handleBuffered() {
     this.buffered.forEach((data) => {
       for (let i = 0; i < this.operations.length; i++) {
-        if (!this.operations.needs(data.tag)) continue;
+        if (!this.operations[i].needs(data.tag)) continue;
         // if the tag matches then substitute it
-        this.operations.substitute(data);
+        this.operations[i].substitute(data);
       }
     });
     // clear the buffer
@@ -57,11 +62,11 @@ class ReserveStations extends Observer {
   }
 
   hasSpace() {
-    this.operations.length !== this.size;
+    return this.operations.length !== this.size;
   }
 
   nextTag() {
-    return `${this.types[0]}${this.counter++}`;
+    return `${this.tagPrefix}${this.counter++}`;
   }
 }
 export default ReserveStations;

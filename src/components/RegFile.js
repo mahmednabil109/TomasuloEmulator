@@ -19,7 +19,8 @@ class RegFile extends Observer {
   update(data) {
     if (data) {
       // buffer the operation until the clk
-      Logger.assert(data instanceof Result);
+      Logger.assert(data instanceof Result, 'data must be a result');
+
       this.buffered.push(data);
     } else {
       // handle clk
@@ -32,8 +33,9 @@ class RegFile extends Observer {
   _handleBUffered() {
     this.buffered.forEach((data) => {
       for (const [key, value] of this.dataMap.entries()) {
-        if (value.tag === data.tag)
-          this.dataMap[key] = { tag: null, value: data.value };
+        if (value.tag === data.tag) {
+          this.dataMap.set(key, { tag: null, value: data.value });
+        }
       }
     });
     // then we clear the buffer;
@@ -44,7 +46,7 @@ class RegFile extends Observer {
   isAvailable(regName) {
     if (this.dataMap.has(regName)) {
       let { tag, value } = this.dataMap.get(regName);
-      return [!!tag, tag ? tag : value];
+      return [!tag, tag ? tag : value];
     } else {
       // default value of any regiseter is zero
       return [true, 0];
