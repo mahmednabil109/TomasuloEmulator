@@ -4,12 +4,14 @@ import Logger from '../utils/Logger';
 import Observer from '../utils/Observer';
 import Output from '../utils/Ouptut';
 import Result from '../utils/Result';
+import { STORE } from '../constants/Operations';
 
 class ReserveStations extends Observer {
   // takes an array types of the valid oprations
   // takes a object that maps operation to delay
-  constructor(size, types, exec) {
+  constructor(size, types, exec, el) {
     super();
+    this.el = el;
     this.size = size;
     this.exec = exec;
     this.counter = 0;
@@ -17,6 +19,7 @@ class ReserveStations extends Observer {
     this.types = new Set(types);
     this.operations = [];
     this.buffered = [];
+
     this.input = new Input(this);
     this.clk = new Input(this);
     this.output = new Output();
@@ -48,6 +51,44 @@ class ReserveStations extends Observer {
       // handleBuffered
       this._handleBuffered();
     }
+    this.render();
+  }
+
+  render() {
+    this.el.innerHTML = '';
+    this.operations.forEach((op) => {
+      const div = document.createElement('div');
+      div.setAttribute('class', 'operation');
+      if (op.operation === STORE) {
+        div.innerHTML = `
+        <p class="otag"> [${op.tag}]</p>
+        <p class="op">${op.operation}</p>
+        <p class="${op.opTag ? 'tag' : ''}">${op.dst}</p>
+        <p>${op.operand1}</p>
+        <p class="${op.tag2 ? 'tag' : ''}">${op.operand2}</p>
+      `;
+      } else {
+        div.innerHTML = `
+        <p class="otag"> [${op.tag}]</p>
+        <p class="op">${op.operation}</p>
+        <p class="${op.tag1 ? 'tag' : ''}">${op.operand1}</p>
+        <p class="${op.tag2 ? 'tag' : ''}">${op.operand2}</p>
+      `;
+      }
+      this.el.appendChild(div);
+    });
+    this.exec.operations.forEach(({ data }) => {
+      if (!this.types.has(data.operation)) return;
+      const div = document.createElement('div');
+      div.setAttribute('class', 'operation executing');
+      div.innerHTML = `
+        <p class="otag">[${data.tag}]</p>
+        <p class="op">${data.operation}</p>
+        <p>${data.operand1}</p>
+        <p>${data.operand2}</p>
+      `;
+      this.el.appendChild(div);
+    });
   }
 
   _handleBuffered() {
@@ -62,7 +103,15 @@ class ReserveStations extends Observer {
     this.buffered = [];
   }
 
-  hasSpace() {
+  hasSpace(OP) {
+    if (OP) {
+      return (
+        this.operations.length +
+          this.exec.operations.filter(({ data }) => OP === data.operation)
+            .length !==
+        this.size
+      );
+    }
     return this.operations.length + this.exec.operations.length !== this.size;
   }
 

@@ -7,8 +7,9 @@ import Output from '../utils/Ouptut';
 import Result from '../utils/Result';
 
 class Memory extends Observer {
-  constructor(latency) {
+  constructor(latency, el) {
     super();
+    this.el = el;
     this.latency = latency;
     this.dataMap = new Map();
     this.operations = [];
@@ -49,6 +50,20 @@ class Memory extends Observer {
         }
         return true;
       });
+    }
+    this.render();
+  }
+
+  render() {
+    this.el.innerHTML = '';
+    for (const [key, value] of this.dataMap) {
+      const div = document.createElement('div');
+      div.setAttribute('class', 'mem-record');
+      div.innerHTML = `
+        <p class="address">@${key}</p>
+        <p>${value}</p>
+      `;
+      this.el.appendChild(div);
     }
   }
 }

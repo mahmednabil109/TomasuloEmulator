@@ -7,9 +7,11 @@ import Output from '../utils/Ouptut';
 import Result from '../utils/Result';
 
 class Multiplier extends Observer {
-  constructor(latency) {
+  constructor(mLatency, dLatency, el) {
     super();
-    this.latency = latency;
+    this.el = el;
+    this.mLatency = mLatency;
+    this.dLatency = dLatency;
     this.operations = [];
 
     this.input = new Input(this);
@@ -30,7 +32,10 @@ class Multiplier extends Observer {
       }));
       // filter finished operations
       this.operations = this.operations.filter(({ data, count }) => {
-        if (count === this.latency) {
+        if (
+          (data.operation === DIV && count === this.dLatency) ||
+          (data.operation === MULT && count === this.mLatency)
+        ) {
           this.output.load(
             new Result(
               data.tag,
@@ -45,6 +50,22 @@ class Multiplier extends Observer {
         return true;
       });
     }
+    this.render();
+  }
+
+  render() {
+    this.el.innerHTML = '';
+    this.operations.forEach(({ data }) => {
+      const div = document.createElement('div');
+      div.setAttribute('class', 'operation executing');
+      div.innerHTML = `
+        <p class="otag">[${data.tag}]</p>
+        <p class="op">${data.operation}</p>
+        <p>${data.operand1}</p>
+        <p>${data.operand2}</p>
+      `;
+      this.el.appendChild(div);
+    });
   }
 }
 
