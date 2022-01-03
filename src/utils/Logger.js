@@ -8,9 +8,9 @@ class Logger {
     console.log(`[${this.prefix || 'LOG'}]`, ...msg);
   }
 
-  static assert(condition) {
+  static assert(condition, msg) {
     // eslint-disable-next-line no-console
-    console.assert(!!condition);
+    console.assert(!!condition, msg);
   }
 }
 

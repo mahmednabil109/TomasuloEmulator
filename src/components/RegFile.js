@@ -36,7 +36,13 @@ class RegFile extends Observer {
     this.el.innerHTML = '';
     for (const [key, value] of this.dataMap) {
       const div = document.createElement('div');
-      div.innerHTML = `${key} -> ${JSON.stringify(value)}`;
+      div.setAttribute('class', 'register');
+      div.innerHTML = `
+        <p style="flex-align:flex-start;">${key}</p>
+        <p>-></p>
+        <p class="tag">[${value.tag || '-'}]</p>
+        <p>${value.value}</p>
+      `;
       this.el.append(div);
     }
   }
@@ -66,6 +72,7 @@ class RegFile extends Observer {
 
   tag(regName, tag) {
     this.dataMap.set(regName.toLowerCase(), { tag, value: 0 });
+    this.render();
   }
 
   setRegto(regName, value) {

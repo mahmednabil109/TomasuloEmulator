@@ -1,5 +1,5 @@
 * {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'dank mono', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding: 0;
@@ -9,15 +9,95 @@
 
 body{
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
   height: 100vh;
 }
 
-#multi,#adder{
+input{
+  display: block;
+  width: 70px;
+  padding: 4px;
+  font-size: 14px;
+}
+
+label{
+  font-size: 14px;
+}
+
+button:disabled{
+  filter: grayscale(1);
+}
+
+#code-area{
+ position: absolute;
+ top: 110px;
+ left: 20px;
+ width: 400px;
+ height: 400px;
+ resize: none;
+ font-size: 20px;
+ padding: 20px;
+ line-height: 1.5em;
+ border: 2px solid #333;
+ box-shadow: 2px 2px 10px rgba(0,0,0,.4);
+}
+
+.control{
+  position: absolute;
+  top: 530px;
+  left: 20px;
+  width: 400px;
+  padding: 4px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+}
+.row{
+  display: flex;
+}
+
+.row > div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 5px;
+}
+
+#clk-btn,
+#start-btn{
+  font-size: 20px;
+  padding: 6px;
+  width: 100px;
+  border-radius: 5px;
+  color: white;
+  background: green;
+  border: none;
+  box-shadow: 1px 1px 10px rgba(0,0,0,.2);
+}
+
+#clk-btn:hover,
+#start-btn:hover{
+  cursor: pointer;
+  transform: scale(1.07);
+}
+
+#clk-btn:disabled:hover{
+  cursor: unset;
+  transform: none;
+}
+
+#clk{
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%) ;
   font-size: 24px;
+  z-index: 1;
+}
+
+
+#clk span{
+  color: green;
 }
 
 .cont{
@@ -29,7 +109,7 @@ body{
 .cont > div{
   flex-shrink: 0;
   width: 100%;
-  height: 60px;
+  height: 40px;
   background-color: white;
 }
 
@@ -40,6 +120,18 @@ body{
 #queue > div + div{
   border-top: none;
   border-bottom: 1px solid black;
+}
+
+#storeRS{
+  width: 200px !important;
+  transform: translateX(-50px);
+}
+
+#storeRS,
+#loadRS{
+  font-size: 12px;
+  padding-left:0 ;
+  
 }
 
 .cont::-webkit-scrollbar{
@@ -55,4 +147,44 @@ body{
 
 #queue{
   flex-direction: column-reverse;
+}
+
+.operation,
+.mem-record,
+.register,
+.instruction{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.operation p,
+.mem-record p,
+.register p,
+.instruction p{
+  margin: 4px;
+}
+
+.mem-record p.address{
+  color: green;
+  font-weight: 900;
+}
+
+.register p.tag,
+.instruction p.op{
+  color:tomato;
+  font-weight: 900;
+}
+
+.operation p.tag{color: red; font-weight: 900;}
+.operation p.op{color: black; font-weight: 900;}
+.operation.executing{
+  background: rgba(0,255,0,.4);
+  color: white;
+}
+
+p.otag{
+  font-weight: 900;
+  font-family: 1.2em;
 }

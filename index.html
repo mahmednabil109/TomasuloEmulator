@@ -7,6 +7,75 @@
     <title>Vite App</title>
   </head>
   <body>
+    <h3 id="clk">CYCLE <span id="clkNum"></span></h3>
+    <textarea id="code-area" spellcheck="false">
+MUL R3,R2,R1
+L.D R11,10(R1)
+SUB R12,R11,R3
+S.D R12,10(R1)
+S.D R12,10(R1)
+S.D R12,10(R1)</textarea
+    >
+    <div class="control">
+      <button id="start-btn" class="btn">START</button>
+      <div class="row" style="align-items: center; padding: 20px 0">
+        <p><strong> Input Latency </strong></p>
+        <div>
+          <label>Adder</label>
+          <input id="add-latency" type="text" value="2" />
+        </div>
+        <div>
+          <label>Multiplier</label>
+          <input id="multi-latency" type="text" value="6" />
+        </div>
+        <div>
+          <label>Divider</label>
+          <input id="divider-latency" type="text" value="10" />
+        </div>
+        <div>
+          <label>Load/Store</label>
+          <input id="load-latency" type="text" value="2" />
+        </div>
+      </div>
+      <div class="row" style="align-items: center; padding: 20px 0">
+        <p><strong> Stations Size </strong></p>
+        <div>
+          <label>Adder</label>
+          <input id="add-size" type="text" value="2" />
+        </div>
+        <div>
+          <label>Multiplier</label>
+          <input id="multi-size" type="text" value="2" />
+        </div>
+        <div>
+          <label>Load</label>
+          <input id="load-size" type="text" value="2" />
+        </div>
+        <div>
+          <label>Store</label>
+          <input id="store-size" type="text" value="2" />
+        </div>
+      </div>
+      <button id="clk-btn" class="btn" disabled="true">CLK</button>
+      <div style="padding: 20px 0; width: 100%">
+        <div style="width: 100%">
+          <p>SET IN MEMORY</p>
+          <div class="row" style="justify-content: space-around; width: 100%">
+            <input type="text" placeholder="address" id="mem-address" />
+            <input type="text" placeholder="value" id="mem-value" />
+            <button style="width: 60px" id="mem-set">SET</button>
+          </div>
+        </div>
+        <div style="width: 100%; padding: 20px 0">
+          <p>SET IN REGFILE</p>
+          <div class="row" style="justify-content: space-around; width: 100%">
+            <input type="text" placeholder="address" id="reg-address" />
+            <input type="text" placeholder="value" id="reg-value" />
+            <button style="width: 60px" id="reg-set">SET</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="1440"

@@ -7,8 +7,9 @@ import Output from '../utils/Ouptut';
 import Result from '../utils/Result';
 
 class Adder extends Observer {
-  constructor(latency) {
+  constructor(latency, el) {
     super();
+    this.el = el;
     this.latency = latency;
     this.operations = [];
 
@@ -48,6 +49,22 @@ class Adder extends Observer {
         return true;
       });
     }
+    this.render();
+  }
+
+  render() {
+    this.el.innerHTML = '';
+    this.operations.forEach(({ data }) => {
+      const div = document.createElement('div');
+      div.setAttribute('class', 'operation executing');
+      div.innerHTML = `
+        <p class="otag">[${data.tag}]</p>
+        <p class="op">${data.operation}</p>
+        <p>${data.operand1}</p>
+        <p>${data.operand2}</p>
+      `;
+      this.el.appendChild(div);
+    });
   }
 }
 
